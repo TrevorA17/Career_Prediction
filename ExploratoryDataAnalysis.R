@@ -108,4 +108,74 @@ print(levene_test)
 tukey_result <- TukeyHSD(anova_result)
 print(tukey_result)
 
+# Load necessary libraries
+install.packages("corrplot")
+library(corrplot)
+
+# Univariate Plots
+
+# 1. Histogram for Numerical_Aptitude
+hist(AptitudeData$Numerical_Aptitude, 
+     main = "Histogram of Numerical Aptitude", 
+     xlab = "Numerical Aptitude", 
+     col = "skyblue", 
+     border = "black")
+
+# 2. Boxplot for Numerical_Aptitude by Career
+boxplot(Numerical_Aptitude ~ Career, 
+        data = AptitudeData, 
+        main = "Boxplot of Numerical Aptitude by Career",
+        xlab = "Career", 
+        ylab = "Numerical Aptitude",
+        col = "lightgreen")
+
+# 3. Bar plot for Career
+career_count <- table(AptitudeData$Career)
+barplot(career_count, 
+        main = "Bar Plot of Career Frequency", 
+        xlab = "Career", 
+        ylab = "Frequency", 
+        col = "coral", 
+        border = "black")
+
+# Multivariate Plots
+
+# 1. Scatter plot for Numerical_Aptitude vs Spatial_Aptitude
+plot(AptitudeData$Numerical_Aptitude, AptitudeData$Spatial_Aptitude,
+     main = "Scatter Plot of Numerical vs Spatial Aptitude", 
+     xlab = "Numerical Aptitude", 
+     ylab = "Spatial Aptitude", 
+     col = "darkblue", 
+     pch = 19)
+
+# 2. Pair plot for multiple numeric variables
+pairs(AptitudeData[, c("Numerical_Aptitude", "Spatial_Aptitude", "Perceptual_Aptitude")], 
+      main = "Pair Plot for Aptitudes")
+
+# 3. Correlation plot for numeric variables
+cor_matrix <- cor(AptitudeData[, c("Numerical_Aptitude", "Spatial_Aptitude", "Perceptual_Aptitude", "Abstract_Reasoning", "Verbal_Reasoning")])
+corrplot(cor_matrix, method = "circle", type = "upper", 
+         tl.col = "black", tl.srt = 45, 
+         title = "Correlation Plot for Aptitude Scores")
+
+# 4. Density plot for two numeric variables
+plot(density(AptitudeData$Numerical_Aptitude), 
+     main = "Density Plot for Numerical vs Spatial Aptitude", 
+     xlab = "Aptitude Scores", 
+     col = "blue", 
+     lwd = 2)
+lines(density(AptitudeData$Spatial_Aptitude), 
+      col = "red", lwd = 2)
+legend("topright", legend = c("Numerical Aptitude", "Spatial Aptitude"), 
+       col = c("blue", "red"), lwd = 2)
+
+# 5. PCA plot
+aptitude_data <- AptitudeData[, c("Numerical_Aptitude", "Spatial_Aptitude", "Perceptual_Aptitude", "Abstract_Reasoning", "Verbal_Reasoning")]
+pca_result <- prcomp(aptitude_data, scale. = TRUE)
+plot(pca_result$x[, 1:2], 
+     main = "PCA Plot of Aptitude Scores", 
+     xlab = "Principal Component 1", 
+     ylab = "Principal Component 2", 
+     col = "darkblue", 
+     pch = 19)
 
