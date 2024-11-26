@@ -85,5 +85,27 @@ print(paste("Kurtosis of Numerical Aptitude:", kurtosis_value))
 correlation_value <- cor(AptitudeData$Numerical_Aptitude, AptitudeData$Spatial_Aptitude, use = "complete.obs")
 print(paste("Correlation between Numerical and Spatial Aptitude:", correlation_value))
 
+# One-Way ANOVA: Testing if Numerical_Aptitude varies across different Careers
+anova_result <- aov(Numerical_Aptitude ~ Career, data = AptitudeData)
+
+# Display the ANOVA result
+summary(anova_result)
+
+# Check Normality of Residuals (Shapiro-Wilk Test)
+shapiro_test <- shapiro.test(residuals(anova_result))
+print(shapiro_test)
+
+# Plot residuals to visually inspect normality
+plot(anova_result, 2)
+
+# Levene's Test for Homogeneity of Variance
+install.packages("car")
+library(car)
+levene_test <- leveneTest(Numerical_Aptitude ~ Career, data = AptitudeData)
+print(levene_test)
+
+# If ANOVA is significant, perform Tukey's HSD test for pairwise comparisons
+tukey_result <- TukeyHSD(anova_result)
+print(tukey_result)
 
 
