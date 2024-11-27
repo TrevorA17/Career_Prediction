@@ -52,3 +52,33 @@ if(nrow(test_data) == 0) {
   cat("Test data contains", nrow(test_data), "rows.\n")
 }
 
+# Load necessary libraries
+library(caret)
+
+# Set seed for reproducibility
+set.seed(123)
+
+# Check the distribution of the 'Career' variable
+cat("Class distribution:\n")
+print(table(AptitudeData$Career))
+
+# Ensure Career is a factor (for stratified sampling)
+AptitudeData$Career <- as.factor(AptitudeData$Career)
+
+# Define cross-validation control with stratified sampling
+cv_control <- trainControl(
+  method = "cv",           # Cross-validation
+  number = 10,             # 10-fold cross-validation
+  sampling = "smote",      # Use SMOTE for balancing the class distribution
+  savePredictions = "final"  # Save predictions for final analysis
+)
+
+# Train a random forest model (you can change this to other models if necessary)
+cv_model <- train(Career ~ ., data = AptitudeData, method = "rf", trControl = cv_control)
+
+# Print the cross-validation results
+print(cv_model)
+
+# Check the accuracy of the model from the cross-validation
+cat("Cross-validation accuracy: ", mean(cv_model$results$Accuracy), "\n")
+
